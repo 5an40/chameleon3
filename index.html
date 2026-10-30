@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal WebAR Project</title>
+    <title>chameleon</title>
     
     <!-- Подключаем A-Frame и MindAR -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
@@ -45,16 +45,16 @@
         <!-- Привязка к маркеру -->
         <a-entity mindar-image-target="targetIndex: 0" id="target-entity">
             
-            <!-- ВНИМАНИЕ: Оставьте раскомментированным ТОЛЬКО ТРУЩИЙСЯ ТЕГ (видео, картинку ИЛИ 3D-модель) -->
+            <!-- ВНИМАНИЕ: Оставьте для теста раскомментированным ТОЛЬКО ТРУЩИЙСЯ ТЕГ (видео, картинку ИЛИ 3D-модель) -->
 
             <!-- А) ЕСЛИ ВЫВОДИМ ВИДЕО -->
             <a-video src="#ar-video" width="1" height="0.56" position="0 0 0" rotation="0 0 0"></a-video>
 
             <!-- Б) ЕСЛИ ВЫВОДИМ ФОТО ИЛИ GIF (с поддержкой прозрачности PNG/GIF) -->
-            <!-- <a-image src="./image.png" width="1" height="1" position="0 0 0" rotation="0 0 0"></a-image> -->
+            <a-image src="./image.png" width="1" height="1" position="0 0 0" rotation="0 0 0"></a-image> 
 
             <!-- В) ЕСЛИ ВЫВОДИМ 3D-МОДЕЛЬ (.glb формат) -->
-            <!-- <a-gltf-model src="#ar-model" scale="0.5 0.5 0.5" position="0 0 0" rotation="0 0 0"></a-gltf-model> -->
+            <a-gltf-model src="#ar-model" scale="0.5 0.5 0.5" position="0 0 0" rotation="0 0 0"></a-gltf-model>
 
         </a-entity>
         
