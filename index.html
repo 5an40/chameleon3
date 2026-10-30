@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal WebAR Project</title>
+    
+    <!-- Подключаем A-Frame и MindAR -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #play-btn {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 999; padding: 14px 28px; background: #28a745; color: white;
+            border: none; border-radius: 30px; font-family: sans-serif; font-size: 16px;
+            cursor: pointer; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <button id="play-btn">Включить звук видео</button>
+
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; filterMinCF:0.0001; filterBeta:0.001;" 
+             color-space="sRGB" 
+             renderer="colorManagement: true, physicallyCorrectLights" 
+             vr-mode-ui="enabled: false" 
+             device-orientation-permission-ui="enabled: false">
+        
+        <a-assets>
+            <!-- 1. Видео (с автоопределением iOS / Android для альфа-канала) -->
+            <video id="ar-video" preload="auto" loop="true" playsinline webkit-playsinline></video>
+            
+            <!-- 2. Статичная картинка или GIF (если нужна предзагрузка) -->
+            <!-- <img id="ar-image" src="./image.png"> -->
+            
+            <!-- 3. 3D-модель (.glb формат) -->
+            <a-asset-item id="ar-model" src="./model.glb"></a-asset-item>
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <!-- Привязка к маркеру -->
+        <a-entity mindar-image-target="targetIndex: 0" id="target-entity">
+            
+            <!-- ВНИМАНИЕ: Оставьте раскомментированным ТОЛЬКО ТРУЩИЙСЯ ТЕГ (видео, картинку ИЛИ 3D-модель) -->
+
+            <!-- А) ЕСЛИ ВЫВОДИМ ВИДЕО -->
+            <a-video src="#ar-video" width="1" height="0.56" position="0 0 0" rotation="0 0 0"></a-video>
+
+            <!-- Б) ЕСЛИ ВЫВОДИМ ФОТО ИЛИ GIF (с поддержкой прозрачности PNG/GIF) -->
+            <!-- <a-image src="./image.png" width="1" height="1" position="0 0 0" rotation="0 0 0"></a-image> -->
+
+            <!-- В) ЕСЛИ ВЫВОДИМ 3D-МОДЕЛЬ (.glb формат) -->
+            <!-- <a-gltf-model src="#ar-model" scale="0.5 0.5 0.5" position="0 0 0" rotation="0 0 0"></a-gltf-model> -->
+
+        </a-entity>
+        
+    </a-scene>
+
+    <script>
+        const video = document.querySelector('#ar-video');
+        const playBtn = document.querySelector('#play-btn');
+        const targetEntity = document.querySelector('#target-entity');
+
+        // Логика для видео
+        if (video) {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            video.src = isIOS ? "./video-ios.mov" : "./video-android.webm";
+
+            targetEntity.addEventListener("targetFound", () => {
+                video.play().catch(() => { playBtn.style.display = "block"; });
+            });
+            targetEntity.addEventListener("targetLost", () => { video.pause(); });
+            playBtn.addEventListener('click', () => {
+                video.play();
+                playBtn.style.display = "none";
+            });
+        }
+    </script>
+</body>
+</html>
